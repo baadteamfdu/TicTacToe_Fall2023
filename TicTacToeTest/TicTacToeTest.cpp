@@ -36,6 +36,14 @@ namespace TicTacToeTest
 			Logger::WriteMessage("Testing Exception handling in getSquareContents - throw invalid argument");
 			board.getSquareContents(3, 1);  // should throw an exception as 3 is invalid
 		}
+
+		TEST_METHOD(CouldntWrite) {
+			Logger::WriteMessage("Writing to 3, 1, should return false");
+			Assert::IsFalse(board.writeSquare(3, 1, TicTacToeBoard::X), L"Square was written to");  // should throw an exception as 3 is invalid
+		}
+
+
+
 		TEST_METHOD(InvalidMove) {
 			// :writeSquare(int row, int col, char currentPlayer)
 			// :getSquareContents(int row, int col)
@@ -45,6 +53,69 @@ namespace TicTacToeTest
 			board.writeSquare(2, 3, TicTacToeBoard::X);
 			Assert::AreEqual(board.getSquareContents(2, 3), 'X');
 			Assert::IsFalse(board.isSquareEmpty(2, 3));
+		}
+		TEST_METHOD(Xwon) {
+			board.writeSquare(0, 0, TicTacToeBoard::X);
+			board.writeSquare(0, 1, TicTacToeBoard::X);
+			board.writeSquare(0, 2, TicTacToeBoard::X);
+			Logger::WriteMessage("Player X testing if they won \n");
+			Assert::IsTrue(board.isWinner(TicTacToeBoard::X), L"Player X Did Not Win");		
+		}
+		TEST_METHOD(Owon) {
+			board.writeSquare(0, 0, TicTacToeBoard::O);
+			board.writeSquare(0, 1, TicTacToeBoard::O);
+			board.writeSquare(0, 2, TicTacToeBoard::O);
+			Logger::WriteMessage("Player O testing if they won \n");
+			Assert::IsTrue(board.isWinner(TicTacToeBoard::O), L"Player O Did Not Win");
+		}
+		TEST_METHOD(XWonDiagonal) {
+			board.writeSquare(0, 0, TicTacToeBoard::X);
+			board.writeSquare(1, 1, TicTacToeBoard::X);
+			board.writeSquare(2, 2, TicTacToeBoard::X);
+			Logger::WriteMessage("Player X testing if they won \n");
+			Assert::IsTrue(board.isWinner(TicTacToeBoard::X), L"Player X Did Not Win");
+		}
+		
+		TEST_METHOD(OWonDiagonal) {
+			board.writeSquare(0, 0, TicTacToeBoard::O);
+			board.writeSquare(1, 1, TicTacToeBoard::O);
+			board.writeSquare(2, 2, TicTacToeBoard::O);
+			Logger::WriteMessage("Player O testing if they won \n");
+			Assert::IsTrue(board.isWinner(TicTacToeBoard::O), L"Player O Did Not Win");
+		}
+
+
+		TEST_METHOD(OWonDiagonalReverse) {
+			board.writeSquare(0, 2, TicTacToeBoard::O);
+			board.writeSquare(1, 1, TicTacToeBoard::O);
+			board.writeSquare(2, 0, TicTacToeBoard::O);
+			Logger::WriteMessage("Player O testing if they won \n");
+			Assert::IsTrue(board.isWinner(TicTacToeBoard::O), L"Player O Did Not Win");
+		}
+
+		TEST_METHOD(reset) {
+			board.writeSquare(0, 0, TicTacToeBoard::X);
+			board.resetBoard();
+			Logger::WriteMessage("Player X testing if 0,0 is empty after writing there \n");
+			Assert::IsTrue(board.isSquareEmpty(0,0), L"Board was not reset");
+		}
+
+		TEST_METHOD(secondO) {
+			Logger::WriteMessage("Player O goes second from game start \n");
+			Assert::IsTrue(board.nextPlayer() == TicTacToeBoard::O, L"Player O did not start");
+		}
+		TEST_METHOD(draw) {
+			board.writeSquare(0, 0, TicTacToeBoard::X);
+			board.writeSquare(1, 1, TicTacToeBoard::X);
+			board.writeSquare(1, 2, TicTacToeBoard::X);
+			board.writeSquare(0, 2, TicTacToeBoard::O);
+			board.writeSquare(2, 2, TicTacToeBoard::O);
+			board.writeSquare(2, 1, TicTacToeBoard::O);
+			board.writeSquare(2, 0, TicTacToeBoard::X);
+			board.writeSquare(1, 0, TicTacToeBoard::O);
+			board.writeSquare(0, 1, TicTacToeBoard::X);
+			Logger::WriteMessage("Testing Draw \n");
+			Assert::IsTrue(board.isDraw(), L"Player's did not draw");
 		}
 
 	};
